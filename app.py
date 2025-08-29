@@ -2,7 +2,7 @@
 import streamlit as st, pandas as pd, numpy as np, matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Qrauts – Portfolio Finanzmodell", layout="wide")
-st.title("Qrauts – Finanzmodell (Sensitivitäten)")
+st.title("Dachpacht Investor Variante – Finanzmodell (Sensitivitäten)")
 
 @st.cache_data
 def load_data():
