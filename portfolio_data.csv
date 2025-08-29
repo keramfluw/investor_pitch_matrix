@@ -1,0 +1,17 @@
+Objekt,WE,Basisjahr,Verbrauch_kWh,Gebaeudetyp,Dach,Vorschlag_kWp,Erzeugung_kWh_p_a
+Elsterstr. 27-31,30,2024,151370,A,40° | Nord/Süd,135.0,125550.0
+Strelitzer Str. 43-49,32,2024,156950,A,40° | Ost/West,135.0,125550.0
+Hannov. Str. 61-67,32,2024,65534,A,40° | Nord/Süd,135.0,125550.0
+Louis-Fürnberg-Str. 9-17,40,2022,129700,B,40° | Ost/West (Neusanierung),180.0,167400.0
+Freiberger/Lidicestr. 2-10,60,2024,405166,C,Flachdach | Mix (2x Süd; 2x Ost/West),265.0,246450.0
+Theklaer/Klingenthaler,90,2024,278737,,Flachdach | tbd,,
+Thaerstr. 40-44,28,2024,178859,A,40° | Ost/West,135.0,125550.0
+Thaerstr. 46-50,24,2024,167042,,40° | Nord/Süd,,
+Thaerstr. 52-56,24,2024,138299,,40° | tbd,,
+Riesaer Str. 9-11,16,2024,100425,A,40° | Nord/Süd,135.0,125550.0
+Riesaer Str. 13-15,16,2024,113538,,40° | tbd,,
+Riesaer Str. 17-19,16,2024,97773,,40° | tbd,,
+An der Mühle 5/7,12,2024,100886,D,40° | Ost/West,75.0,69750.0
+An der Mühle 9/11,12,2024,91474,D,40° | Ost/West,75.0,69750.0
+An der Mühle 13/15,12,2024,77129,D,40° | Ost/West,75.0,69750.0
+Obere Nordstraße 29-31,12,2024,95660,D,40° | Ost/West,75.0,69750.0
