@@ -1,11 +1,13 @@
 
 import streamlit as st, pandas as pd, numpy as np, matplotlib.pyplot as plt
+
 st.set_page_config(page_title="Qrauts – Portfolio Finanzmodell", layout="wide")
 st.title("Qrauts – Finanzmodell (Sensitivitäten)")
 
 @st.cache_data
 def load_data():
     return pd.read_csv("portfolio_data.csv")
+
 df = load_data()
 
 st.sidebar.header("Annahmen")
@@ -27,6 +29,7 @@ n_debt = st.sidebar.number_input("FK-Laufzeit (Jahre)", 1, 25, 15, 1)
 objects = st.multiselect("Objekte auswählen (leer = alle)", df["Objekt"].tolist())
 dff = df[df["Objekt"].isin(objects)].copy() if objects else df.copy()
 
+# Year-1 Portfolio View
 dff["kWp"] = dff["Vorschlag_kWp"].fillna(0)
 dff["gen_y1"] = dff["kWp"] * yield_kwh_kwp
 dff["sc_kWh"] = np.minimum(dff["gen_y1"] * sc, dff["Verbrauch_kWh"])
@@ -47,6 +50,7 @@ plt.ylabel("MWh/a")
 plt.title("Eigenverbrauch vs. Einspeisung – Portfolio (Y1)")
 st.pyplot(fig)
 
+# Mehrjahres-Cashflows (vereinfacht, Steuern=0%)
 kWp_total = dff["kWp"].sum()
 cons_total = dff["Verbrauch_kWh"].sum()
 capex = kWp_total * capex_kwp
@@ -86,20 +90,30 @@ def irr(cashflows, guess=0.1, tol=1e-6, maxiter=100):
             npv += c / ((1+rate)**t)
             if t > 0: d += -t * c / ((1+rate)**(t+1))
         if abs(npv) < tol: return rate
-        rate -= npv/d if d != 0 else 0.0
+        if d == 0: return float("nan")
+        rate -= npv/d
     return float("nan")
 
 irr_equity = irr(cf_equity)
 irr_unlev = irr([-capex] + ebitda_list[1:])
-dscr_vals = [cfads[y] / debt_serv_list[y] if debt_serv_list[y] > 0 else float("nan") for y in range(len(years_list))]
+
+dscr_vals = []
+for y in range(len(years_list)):
+    ds = debt_serv_list[y]
+    dscr_vals.append(cfads[y]/ds if ds > 0 else float("nan"))
 dscr_min = np.nanmin(dscr_vals[1:]) if np.any(~np.isnan(dscr_vals[1:])) else float("nan")
 dscr_avg = np.nanmean([v for v in dscr_vals[1:] if not np.isnan(v)]) if np.any(~np.isnan(dscr_vals[1:])) else float("nan")
 
 st.subheader("KPIs – Portfolio")
-st.write(f"**CAPEX:** {capex:,.0f} €".format(capex=capex))
-st.write(f"**Unlevered IRR:** {irr:.2%}".format(irr=irr_unlev) if not np.isnan(irr_unlev) else "Unlevered IRR: n/a")
-st.write(f"**Equity IRR:** {irr:.2%}".format(irr=irr_equity) if not np.isnan(irr_equity) else "Equity IRR: n/a")
-st.write(f"**DSCR (min / Ø):** {a:.2f} / {b:.2f}".format(a=dscr_min, b=dscr_avg) if not np.isnan(dscr_min) else "DSCR: n/a")
+st.write(f"**CAPEX:** {capex:,.0f} €")
+st.write(f"**Unlevered IRR:** {irr_unlev:.2%}" if not np.isnan(irr_unlev) else "**Unlevered IRR:** n/a")
+st.write(f"**Equity IRR:** {irr_equity:.2%}" if not np.isnan(irr_equity) else "**Equity IRR:** n/a")
+if not np.isnan(dscr_min) and not np.isnan(dscr_avg):
+    st.write(f"**DSCR (min / Ø):** {dscr_min:.2f} / {dscr_avg:.2f}")
+elif not np.isnan(dscr_min):
+    st.write(f"**DSCR (min):** {dscr_min:.2f}")
+else:
+    st.write("**DSCR:** n/a")
 
 res = pd.DataFrame({
     "Year": years_list,
