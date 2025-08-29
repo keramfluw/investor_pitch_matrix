@@ -1,7 +1,7 @@
 
 import streamlit as st, pandas as pd, numpy as np, matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Dachpacht Investor Variante– Portfolio Finanzmodell", layout="wide")
+st.set_page_config(page_title="Dachpacht Investor Pitch– Portfolio Finanzmodell", layout="wide")
 st.title("Dachpacht Investor Variante – Finanzmodell (Sensitivitäten)")
 
 @st.cache_data
